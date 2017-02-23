@@ -1,0 +1,138 @@
+---
+title: "Using Seawulf"
+output: html_document
+---
+
+# Transferring files to Seawulf
+
+For the examples below, you will need several files in your home directory. Open Terminal on your local machine.
+
+```
+scp LOCATION/RunRScript.sh NAME@login.seawulf.stonybrook.edu:.
+scp LOCATION/RunJAGSScript.sh NAME@login.seawulf.stonybrook.edu:.
+scp LOCATION/TestRCode.R NAME@login.seawulf.stonybrook.edu:.
+scp LOCATION/TestJAGSCode_multicore.R NAME@login.seawulf.stonybrook.edu:.
+scp LOCATION/TestJAGSCode.jags NAME@login.seawulf.stonybrook.edu:.
+scp LOCATION/PLOSdataConcord.csv NAME@login.seawulf.stonybrook.edu:.
+```
+
+# Using R in interactive mode
+
+We'll start off by opening an interactive window to access R on Seawulf. This is not something we would do in regular practice, but knowing how to do it is useful when things ar enot working, or you are getting errors. We'll start from the very beginning. In a Terminal
+
+```
+ssh -X NAME@login.seawulf.stonybrook.edu
+```
+
+Load the basic modules
+
+```
+module load shared
+module load torque/6.0.2
+```
+
+Now we'll launch an interactive environment
+
+```
+qsub -I -l nodes=1:ppn=1 -q debug
+```
+
+This says we want one node, and one processor per node. Now we need to load the other modules we might need.
+
+```
+module load openblas/dynamic/0.2.18
+module load R/3.3.2
+module load mvapich2/gcc/64/2.2rc1
+```
+
+Now launch R by typing "R":
+
+```
+R
+```
+
+Now you have access to R just like you would on your local machine, noting that your file structure on the cluster is different from the file structure on your desktop and your file names will need to be amended accordingly.
+
+When you are done with R in interactive mode, quit R using quit(). At that point you are back to the compute node, but you need to exit the computer node to get back to the master node to go through the next example. (You cannot send batch jobs from a compute node, you need to send them from the master node (sometimes called the head node, or login node). At the prompt, type
+
+```
+exit
+```
+
+Now the prompt should read something like [NAME@login ~]$.
+
+
+# Using R in batch mode
+
+Once again, we'll start from the very beginning. In a Terminal
+
+```
+ssh -X NAME@login.seawulf.stonybrook.edu
+```
+
+Load the basic modules
+
+```
+module load shared
+module load torque/6.0.2
+```
+
+Now you can submit your job using the 'qsub' command, but first you'll probably want to look over the script you will submit to the cluster. You have a test script, called RunRScript.sh. We can look at this using 'nano' or 'vim'. In other words, try
+
+```
+nano RunRScript.sh
+```
+
+Now you can double check that the script is correct and make changes as needed. Once you are happy with the script, save your changes and exit the editor.
+
+To submit the job to the cluster, use the qsub command:
+
+```
+qsub RunRScript.sh
+```
+
+You can check that your job is running by typing (NAME should be changed to your login name)
+
+```
+qstat -u NAME
+```
+
+If the job is small, like our test script, it may finish before you can even see it in the queue. You'll know that it finished by checking whether your output scripts were created. We can check our files using
+
+```
+ls -l
+```
+
+# Using JAGS in batch mode
+
+Once again, we'll start from the very beginning. In a Terminal
+
+```
+ssh -X NAME@login.seawulf.stonybrook.edu
+```
+
+Load the basic modules
+
+```
+module load shared
+module load torque/6.0.2
+```
+
+To submit the job to the cluster, use the qsub command:
+
+```
+qsub RunJAGSScript.sh
+```
+
+You can check that your job is running by typing (NAME should be changed to your login name)
+
+```
+qstat -u NAME
+```
+
+If the job is small, like our test script, it may finish before you can even see it in the queue. You'll know that it finished by checking whether your output scripts were created. We can check our files using
+
+```
+ls -l
+```
+

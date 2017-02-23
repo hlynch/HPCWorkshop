@@ -1,0 +1,12 @@
+
+model {
+  for(i in 1:length(y))
+  {
+    y[i] ~ dnorm(mu[i], tau)
+    mu[i] <- alpha+beta*Temperature[i]
+  }
+  alpha ~ dnorm(0.0, 0.000001)
+  beta ~ dnorm(0.0, 0.000001)
+  tau ~ dgamma(0.001,0.001)
+  sigma <- 1 / sqrt(tau)
+}
