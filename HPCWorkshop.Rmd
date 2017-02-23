@@ -102,7 +102,7 @@ If the job is small, like our test script, it may finish before you can even see
 ```
 ls -l
 ```
-
+.
 # Using JAGS in batch mode
 
 Once again, we'll start from the very beginning. In a Terminal
@@ -112,7 +112,7 @@ ssh -X NAME@login.seawulf.stonybrook.edu
 ```
 
 Load the basic modules
-
+.
 ```
 module load shared
 module load torque/6.0.2
@@ -146,7 +146,10 @@ The [`multiprocessing`](https://docs.python.org/2/library/multiprocessing.html) 
 It allows you to make use of multiple cores on a single node of the cluster. On Seawulf this would allow you to run on 28 cores concurrently, but this module can also be used to take advantage of all the cores on your desktop/laptop.
 
 The easiest way to use the multiprocessing module is to use the `map()` method of `multiprocessing.Pool` to manage processes, distribute tasks and collect results.
-See pi_multiprocessing.py for an example of a multiprocessing script.
+
+>...the Pool object which offers a convenient means of parallelizing the execution of a function across multiple input values, distributing the input data across processes (data parallelism). 
+
+See [pi_multiprocessing.py](/Python/pi_multiprocessing.py) for an example of a multiprocessing script.
 
 Example bash script for a python multiprocessing job:
 ```bash
@@ -167,7 +170,7 @@ python pi_multiprocessing.py
 If you want to use multiple cores across multiple nodes then you'll need to use MPI. There is a python module called [`MPI4Py`](https://mpi4py.readthedocs.io/en/stable/) that provides an interface to MPI allowing you to structure communications between processes. However, if each process is independent then we can use a wrapper module [`MPIPool`](https://github.com/adrn/mpipool), which provides similar syntax to the `multiprocessing` module.
 If you are using MPI you will also need to load an additional module (`mvapich2/gcc/64/2.2rc1`) in your job script. Additionally, when you call your
 python script in your job script you will need to use `mpirun python <you job script.sh>`.
-See pi_MPI.py for an example of an MPI script.
+See [pi_MPI.py](/Python/pi_MPI.py) for an example of an MPI script.
 
 Example bash script for a python MPI job:
 ```bash
