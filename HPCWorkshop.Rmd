@@ -160,7 +160,7 @@ module load shared
 module load anaconda/2
 
 cd $HOME
-python pi_MPI.py
+python pi_multiprocessing.py
 ```
 
 
