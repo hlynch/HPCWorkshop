@@ -3,7 +3,7 @@ import multiprocessing
 import datetime
 
 '''
-Estimating the value of pi through random sampling.
+Estimating the value of pi through random sampling parallelised using multiprocessing.
 
 The area of a circle of radius 1 is pi.
 This circle fits inside a 2x2 square, which has an area of 4.
