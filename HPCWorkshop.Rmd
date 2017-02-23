@@ -102,7 +102,7 @@ If the job is small, like our test script, it may finish before you can even see
 ```
 ls -l
 ```
-.
+
 # Using JAGS in batch mode
 
 Once again, we'll start from the very beginning. In a Terminal
