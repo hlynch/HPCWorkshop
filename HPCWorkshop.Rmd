@@ -118,6 +118,7 @@ module load shared
 module load torque/6.0.2
 ```
 
+
 To submit the job to the cluster, use the qsub command:
 
 ```
@@ -168,8 +169,8 @@ python pi_multiprocessing.py
 
 ## MPI
 If you want to use multiple cores across multiple nodes then you'll need to use MPI. There is a python module called [`MPI4Py`](https://mpi4py.readthedocs.io/en/stable/) that provides an interface to MPI allowing you to structure communications between processes. However, if each process is independent then we can use a wrapper module [`MPIPool`](https://github.com/adrn/mpipool), which provides similar syntax to the `multiprocessing` module.
-If you are using MPI you will also need to load an additional module (`mvapich2/gcc/64/2.2rc1`) in your job script. Additionally, when you call your
-python script in your job script you will need to use `mpirun python <you job script.sh>`.
+If you are using MPI you will also need to load an additional module (`mvapich2/gcc/64/2.2rc1`) in your job script. Additionally, when you call your python script in your job script you will need to use `mpirun python <you job script.sh>`.
+
 See [pi_MPI.py](/Python/pi_MPI.py) for an example of an MPI script.
 
 Example bash script for a python MPI job:
