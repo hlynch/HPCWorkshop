@@ -133,7 +133,7 @@ qstat -u NAME
 If the job is small, like our test script, it may finish before you can even see it in the queue. You'll know that it finished by checking whether your output scripts were created. We can check our files using
 
 ```
-ls -l
+Example bash script for a python multiprocessing job:ls -l
 ```
 
 # Python
@@ -169,7 +169,7 @@ If you are using MPI you will also need to load an additional module (`mvapich2/
 python script in your job script you will need to use `mpirun python <you job script.sh>`.
 See pi_MPI.py for an example of an MPI script.
 
-
+Example bash script for a python MPI job:
 ```bash
 #!/bin/bash
 #PBS -l nodes=2:ppn=28,walltime=00:5:00
