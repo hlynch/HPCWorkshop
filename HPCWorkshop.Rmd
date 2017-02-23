@@ -142,12 +142,11 @@ The steps to submit a python based job to the queue are the same for python as t
 Seawulf has an anaconda module that contains a distribution of python (2.7) and a collection of useful packages pre-installed.
 
 ## Multiprocessing
-The `multiprocessing` module is part of the python standard library.
-It allows you to make use of multiple cores on a single node of the cluster. On Seawulf this would allow you to run on 28 cores concurrently, but this module
-can also be used to take advantage of all the cores on your desktop/laptop.
+The [`multiprocessing`](https://docs.python.org/2/library/multiprocessing.html) module is part of the python standard library.
+It allows you to make use of multiple cores on a single node of the cluster. On Seawulf this would allow you to run on 28 cores concurrently, but this module can also be used to take advantage of all the cores on your desktop/laptop.
 
 The easiest way to use the multiprocessing module is to use the `map()` method of `multiprocessing.Pool` to manage processes, distribute tasks and collect results.
-See the pi_multiprocessing.py script for an example of a multiprocessing script.
+See pi_multiprocessing.py for an example of a multiprocessing script.
 
 Example bash script for a python multiprocessing job:
 ```bash
@@ -165,12 +164,10 @@ python pi_multiprocessing.py
 
 
 ## MPI
-If you want to use multiple cores across multiple nodes then you'll need to use MPI. There is a python module called "MPI4Py" that
-provides an interface to MPI allowing you to structure communications between processes, however if each process is independent
-then we can use a wrapper module "MPIPool", which provides similar syntax to the `multiprocessing` module.
+If you want to use multiple cores across multiple nodes then you'll need to use MPI. There is a python module called [`MPI4Py`](https://mpi4py.readthedocs.io/en/stable/) that provides an interface to MPI allowing you to structure communications between processes. However, if each process is independent then we can use a wrapper module [`MPIPool`](https://github.com/adrn/mpipool), which provides similar syntax to the `multiprocessing` module.
 If you are using MPI you will also need to load an additional module (`mvapich2/gcc/64/2.2rc1`) in your job script. Additionally, when you call your
 python script in your job script you will need to use `mpirun python <you job script.sh>`.
-See the pi_MPI.py script for an example of an MPI script.
+See pi_MPI.py for an example of an MPI script.
 
 
 ```bash
