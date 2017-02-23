@@ -136,3 +136,55 @@ If the job is small, like our test script, it may finish before you can even see
 ls -l
 ```
 
+# Python
+
+The steps to submit a python based job to the queue are the same for python as they are for R, but you need to load a different set of modules in your job script.
+Seawulf has an anaconda module that contains a distribution of python (2.7) and a collection of useful packages pre-installed.
+
+## Multiprocessing
+The `multiprocessing` module is part of the python standard library.
+It allows you to make use of multiple cores on a single node of the cluster. On Seawulf this would allow you to run on 28 cores concurrently, but this module
+can also be used to take advantage of all the cores on your desktop/laptop.
+
+The easiest way to use the multiprocessing module is to use the `map()` method of `multiprocessing.Pool` to manage processes, distribute tasks and collect results.
+See the pi_multiprocessing.py script for an example of a multiprocessing script.
+
+Example bash script for a python multiprocessing job:
+```bash
+#!/bin/bash
+#PBS -l nodes=1:ppn=28,walltime=00:5:00
+#PBS -N mpi_pi
+#PBS -q short
+
+module load shared
+module load anaconda/2
+
+cd $HOME
+python pi_MPI.py
+```
+
+
+## MPI
+If you want to use multiple cores across multiple nodes then you'll need to use MPI. There is a python module called "MPI4Py" that
+provides an interface to MPI allowing you to structure communications between processes, however if each process is independent
+then we can use a wrapper module "MPIPool", which provides similar syntax to the `multiprocessing` module.
+If you are using MPI you will also need to load an additional module (`mvapich2/gcc/64/2.2rc1`) in your job script. Additionally, when you call your
+python script in your job script you will need to use `mpirun python <you job script.sh>`.
+See the pi_MPI.py script for an example of an MPI script.
+
+
+```bash
+#!/bin/bash
+#PBS -l nodes=2:ppn=28,walltime=00:5:00
+#PBS -N mpi_pi
+#PBS -q short
+
+module load shared
+module load mvapich2/gcc/64/2.2rc1
+module load anaconda/2
+
+cd $HOME
+mpirun python pi_MPI.py
+```
+
+
