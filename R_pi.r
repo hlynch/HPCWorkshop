@@ -8,6 +8,7 @@
 # equal to the ration of the area of the circle and the area of
 # the square, or pi/4.
 
+#Parallelised using the snowfall package (https://cran.r-project.org/web/packages/snowfall/index.html)
 
 install.packages(c("snowfall"), repos = "http://cran.case.edu")
 library(snowfall)
