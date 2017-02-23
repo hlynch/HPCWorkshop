@@ -30,9 +30,7 @@ def mpi_worker(n):
 
 
 ''' Create the worker pool from the MPIPool module (https://github.com/adrn/mpipool). This sets up the processes
-    that will generate points to calculate pi. You can create a pool with more processes than
-    the number of CPUs available, but this will be slower. Seawulfs nodes each have 28 cores
-    that can be used.'''
+    that will generate points to calculate pi. '''
 pool = MPIPool()
 
 """Make sure only we run map() on the master process. Everything above this section of code will be run in all
