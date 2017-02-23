@@ -1,3 +1,14 @@
+
+# Estimating the value of pi through random sampling.
+# The area of a circle of radius 1 is pi.
+# This circle fits inside a 2x2 square, which has an area of 4.
+# To estimate the value of pi we generate random points across
+# the square and count how many are inside the circle. The ratio of
+# points within and outside the circle should be approximately
+# equal to the ration of the area of the circle and the area of
+# the square, or pi/4.
+
+
 install.packages(c("snowfall"), repos = "http://cran.case.edu")
 library(snowfall)
 
