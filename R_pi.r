@@ -1,5 +1,10 @@
-install.packages(c("snowfall"), repos = "http://cran.case.edu")
+dir.create("R_libs", showWarnings = FALSE, recursive = TRUE)
+
+### Install multiple packages.
+install.packages(c("snow","snowfall","rlecuyer"), lib = "R_libs", repos = "http://cran.case.edu", dependencies = "Imports")
+library(snow)
 library(snowfall)
+library(rlecuyer)
 
 #Timing
 t = proc.time()

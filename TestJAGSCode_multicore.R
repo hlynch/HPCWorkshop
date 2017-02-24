@@ -1,12 +1,11 @@
 #############################
 #
-# Step #2: Load all the libraries and data
+# Step #1: Load all the libraries and data
 #
 #############################
-#dir.create(Sys.getenv("R_LIBS_USER"), showWarnings = FALSE, recursive = TRUE)
-### Install multiple packages.
-#install.packages(c("R2jags","boot","abind"), Sys.getenv("R_LIBS_USER"), repos = #"http://cran.case.edu", dependencies = "Imports")
-install.packages(c("boot","abind","rjags","R2jags","snowfall","R2WinBUGS"), repos = "http://cran.case.edu")
+dir.create("R_libs", showWarnings = FALSE, recursive = TRUE)
+
+install.packages(c("boot","abind","snowfall","R2WinBUGS"),lib="R_libs", repos = "http://cran.case.edu")
 
 library(rjags)
 library(R2jags)
@@ -20,7 +19,7 @@ Concord<-read.csv("PLOSdataConcord.csv",header=T)
 
 #############################
 #
-# Step #4: Make a list where you include all the data the model will need to run
+# Step #2: Make a list where you include all the data the model will need to run
 #
 #############################
 
@@ -30,7 +29,7 @@ Dat <- list(
 )
 #############################
 #
-# Step #5: Make a function (with no inputs) where you put a list of parameters and their initial values
+# Step #3: Make a function (with no inputs) where you put a list of parameters and their initial values
 #
 #############################
 
@@ -38,7 +37,7 @@ InitStage <- function() {list(alpha=1,beta=1,tau=100)}
 
 #############################
 #
-# Step #6: Make a column vector with the names of the parameters you want to track
+# Step #4: Make a column vector with the names of the parameters you want to track
 #
 #############################
 
@@ -46,7 +45,7 @@ ParsStage <- c("alpha","beta","sigma")
 
 #############################
 #
-# Step #7: Set the variables for the MCMC
+# Step #5: Set the variables for the MCMC
 #
 #############################
 
@@ -57,7 +56,7 @@ nc <- 2  # number of chains
 
 #############################
 #
-# Step #8: Run the jags function to run the code
+# Step #6: Run the jags function to run the code
 #
 #############################
 
@@ -100,7 +99,7 @@ system.time(m<-JAGSParallel(3,data=Dat, inits=InitStage, params=ParsStage, model
 
 #############################
 #
-# Step #9: Print the sumamry and explore the object that was returned
+# Step #7: Print the sumamry and explore the object that was returned
 #
 #############################
 

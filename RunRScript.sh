@@ -10,5 +10,6 @@ module load openblas/dynamic/0.2.18
 module load R/3.3.2
 
 cd $HOME
+export R_LIBS=~/R_libs
 
 Rscript TestRCode.R
