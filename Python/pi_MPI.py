@@ -4,7 +4,15 @@ import random
 import datetime
 
 '''
-Estimating the value of pi through random sampling.
+Estimating the value of pi through random sampling parallelised using MPI
+
+The area of a circle of radius 1 is pi.
+This circle fits inside a 2x2 square, which has an area of 4.
+To estimate the value of pi we generate random points across
+the square and count how many are inside the circle. The ratio of
+points within and outside the circle should be approximately
+equal to the ration of the area of the circle and the area of
+the square, or pi/4.
 '''
 
 # Timing
@@ -30,9 +38,7 @@ def mpi_worker(n):
 
 
 ''' Create the worker pool from the MPIPool module (https://github.com/adrn/mpipool). This sets up the processes
-    that will generate points to calculate pi. You can create a pool with more processes than
-    the number of CPUs available, but this will be slower. Seawulfs nodes each have 28 cores
-    that can be used.'''
+    that will generate points to calculate pi. '''
 pool = MPIPool()
 
 """Make sure only we run map() on the master process. Everything above this section of code will be run in all
