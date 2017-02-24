@@ -134,7 +134,7 @@ qstat -u NAME
 If the job is small, like our test script, it may finish before you can even see it in the queue. You'll know that it finished by checking whether your output scripts were created. We can check our files using
 
 ```
-Example bash script for a python multiprocessing job:ls -l
+ls -l
 ```
 
 ## Installing R packages
