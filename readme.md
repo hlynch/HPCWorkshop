@@ -1,0 +1,243 @@
+---
+title: "Using Seawulf"
+output: html_document
+---
+
+# Transferring files to Seawulf
+
+For the examples below, you will need several files in your home directory. Open Terminal on your local machine.
+
+```
+scp LOCATION/RunRScript.sh NAME@login.seawulf.stonybrook.edu:.
+scp LOCATION/RunJAGSScript.sh NAME@login.seawulf.stonybrook.edu:.
+scp LOCATION/TestRCode.R NAME@login.seawulf.stonybrook.edu:.
+scp LOCATION/TestJAGSCode_multicore.R NAME@login.seawulf.stonybrook.edu:.
+scp LOCATION/TestJAGSCode.jags NAME@login.seawulf.stonybrook.edu:.
+scp LOCATION/PLOSdataConcord.csv NAME@login.seawulf.stonybrook.edu:.
+```
+
+# Using R in interactive mode
+
+We'll start off by opening an interactive window to access R on Seawulf. This is not something we would do in regular practice, but knowing how to do it is useful when things ar enot working, or you are getting errors. We'll start from the very beginning. In a Terminal
+
+```
+ssh -X NAME@login.seawulf.stonybrook.edu
+```
+
+Load the basic modules
+
+```
+module load shared
+module load torque/6.0.2
+```
+
+Now we'll launch an interactive environment
+
+```
+qsub -I -l nodes=1:ppn=1 -q debug
+```
+
+This says we want one node, and one processor per node. Now we need to load the other modules we might need.
+
+```
+module load openblas/dynamic/0.2.18
+module load R/3.3.2
+module load mvapich2/gcc/64/2.2rc1
+```
+
+Now launch R by typing "R":
+
+```
+R
+```
+
+Now you have access to R just like you would on your local machine, noting that your file structure on the cluster is different from the file structure on your desktop and your file names will need to be amended accordingly.
+
+When you are done with R in interactive mode, quit R using quit(). At that point you are back to the compute node, but you need to exit the computer node to get back to the master node to go through the next example. (You cannot send batch jobs from a compute node, you need to send them from the master node (sometimes called the head node, or login node). At the prompt, type
+
+```
+exit
+```
+
+Now the prompt should read something like [NAME@login ~]$.
+
+
+# Using R in batch mode
+
+Once again, we'll start from the very beginning. In a Terminal
+
+```
+ssh -X NAME@login.seawulf.stonybrook.edu
+```
+
+Load the basic modules
+
+```
+module load shared
+module load torque/6.0.2
+```
+
+Now you can submit your job using the 'qsub' command, but first you'll probably want to look over the script you will submit to the cluster. You have a test script, called RunRScript.sh. We can look at this using 'nano' or 'vim'. In other words, try
+
+```
+nano RunRScript.sh
+```
+
+Now you can double check that the script is correct and make changes as needed. Once you are happy with the script, save your changes and exit the editor.
+
+To submit the job to the cluster, use the qsub command:
+
+```
+qsub RunRScript.sh
+```
+
+You can check that your job is running by typing (NAME should be changed to your login name)
+
+```
+qstat -u NAME
+```
+
+If the job is small, like our test script, it may finish before you can even see it in the queue. You'll know that it finished by checking whether your output scripts were created. We can check our files using
+
+```
+ls -l
+```
+
+# Using JAGS in batch mode
+
+Once again, we'll start from the very beginning. In a Terminal
+
+```
+ssh -X NAME@login.seawulf.stonybrook.edu
+```
+
+Load the basic modules
+.
+```
+module load shared
+module load torque/6.0.2
+```
+
+
+To submit the job to the cluster, use the qsub command:
+
+```
+qsub RunJAGSScript.sh
+```
+
+You can check that your job is running by typing (NAME should be changed to your login name)
+
+```
+qstat -u NAME
+```
+
+If the job is small, like our test script, it may finish before you can even see it in the queue. You'll know that it finished by checking whether your output scripts were created. We can check our files using
+
+```
+ls -l
+```
+
+## Installing R packages
+
+The r installation is shared between all users and to make sure it works for everyone users don't have permissions to install new packages to the default library.
+To get around this limitation we can install packages into a separate location in your home directory. The first step is to create a directory to install packages to.
+We can either do this directly in the terminal by using the command `mkdir R_libs`, or in R. In the example script `TestJAGSCode_multicore.R` this is done in the line
+
+```
+ dir.create("R_libs", showWarnings = FALSE, recursive = TRUE)
+```
+
+We then install packages into this directory by setting the `lib` option in `install.packages`.
+
+```
+install.packages(c("boot","abind","rjags","R2jags","snowfall","R2WinBUGS"),lib="R_libs", repos = "http://cran.case.edu")
+```
+
+You should only need to do these steps once and then the packages will be available for future use.
+
+The final step is to tell R where to find the newly installed packages. You can specify this location at the point you load the packages in R:
+
+```
+library(snowfall,lib.loc = "R_libs")
+```
+
+However if you have a lot of packages it's easier to tell R where to fnd the packages when it loads.
+To do this we add an additional line to the job script which we submit.
+
+```
+export R_LIBS=~/R_libs
+```
+
+You should then be able to load packages without specifying where to load it form.
+Your final job script would look something like this...
+
+```bash
+#!/bin/bash
+
+#PBS -l nodes=1:ppn=1,walltime=00:05:00
+#PBS -N Occupancy
+#PBS -q debug
+
+module load shared
+module load torque/6.0.2
+module load openblas/dynamic/0.2.18
+module load R/3.3.2
+
+cd $HOME
+export R_LIBS=~/R_libs
+
+Rscript TestRCode.R
+```
+
+# Python
+
+The steps to submit a python based job to the queue are the same for python as they are for R, but you need to load a different set of modules in your job script.
+Seawulf has an anaconda module that contains a distribution of python (2.7) and a collection of useful packages pre-installed.
+
+## Multiprocessing
+The [`multiprocessing`](https://docs.python.org/2/library/multiprocessing.html) module is part of the python standard library.
+It allows you to make use of multiple cores on a single node of the cluster. On Seawulf this would allow you to run on 28 cores concurrently, but this module can also be used to take advantage of all the cores on your desktop/laptop.
+
+The easiest way to use the multiprocessing module is to use the `map()` method of `multiprocessing.Pool` to manage processes, distribute tasks and collect results.
+
+>...the Pool object which offers a convenient means of parallelizing the execution of a function across multiple input values, distributing the input data across processes (data parallelism). 
+
+See [pi_multiprocessing.py](/Python/pi_multiprocessing.py) for an example of a multiprocessing script.
+
+Example bash script for a python multiprocessing job:
+```bash
+#!/bin/bash
+#PBS -l nodes=1:ppn=28,walltime=00:5:00
+#PBS -N multiprocessing_pi_py
+#PBS -q short
+
+module load shared
+module load anaconda/2
+
+cd $HOME
+python pi_multiprocessing.py
+```
+
+
+## MPI
+If you want to use multiple cores across multiple nodes then you'll need to use MPI. There is a python module called [`MPI4Py`](https://mpi4py.readthedocs.io/en/stable/) that provides an interface to MPI allowing you to structure communications between processes. However, if each process is independent then we can use a wrapper module [`MPIPool`](https://github.com/adrn/mpipool), which provides similar syntax to the `multiprocessing` module.
+If you are using MPI you will also need to load an additional module (`mvapich2/gcc/64/2.2rc1`) in your job script. Additionally, when you call your python script in your job script you will need to use `mpirun python <you job script.sh>`.
+
+See [pi_MPI.py](/Python/pi_MPI.py) for an example of an MPI script.
+
+Example bash script for a python MPI job:
+```bash
+#!/bin/bash
+#PBS -l nodes=2:ppn=28,walltime=00:5:00
+#PBS -N mpi_pi_py
+#PBS -q short
+
+module load shared
+module load mvapich2/gcc/64/2.2rc1
+module load anaconda/2
+
+cd $HOME
+mpirun python pi_MPI.py
+```
+
+
